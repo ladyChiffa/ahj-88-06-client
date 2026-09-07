@@ -6,6 +6,11 @@ const phoneInput = subscribeWidget.querySelector('.phone');
 subscribeForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
+    const body = Array.from(subscribeForm.elements)
+                      .filter( ({name}) => name )
+                      .map( ({name, value}) => `${name}=${value}` )
+                      .join('&');
+
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         console.log(xhr.readyState);
@@ -13,6 +18,6 @@ subscribeForm.addEventListener('submit', (e) => {
         if (xhr.readyState !== 4) return; // еще не получили ответ на запрос
         console.log(xhr.responseText);
     }
-    xhr.open('GET', 'http://localhost:8080');
-    xhr.send();
+    xhr.open('POST', 'http://localhost:8080');
+    xhr.send(body);
 });
