@@ -1,12 +1,18 @@
-import Popover from "./popover";
+const subscribeWidget = document.querySelector('.subscribe');
+const subscribeForm = subscribeWidget.querySelector('.subscribe-form');
+const nameInput = subscribeWidget.querySelector('.name');
+const phoneInput = subscribeWidget.querySelector('.phone');
 
-const form = document.querySelector('.form-widget');
-const button = form.querySelector('button');
-
-const popover = new Popover();
-
-button.addEventListener('click', (e) => {
+subscribeForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    popover.togglePopover('Popover title', 'And here\'s some amasing content. It\'s very engaging. Right?', e.target);
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        console.log(xhr.readyState);
+            
+        if (xhr.readyState !== 4) return; // еще не получили ответ на запрос
+        console.log(xhr.responseText);
+    }
+    xhr.open('GET', 'http://localhost:8080');
+    xhr.send();
 });
