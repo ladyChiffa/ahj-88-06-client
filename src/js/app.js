@@ -8,7 +8,7 @@ subscribeForm.addEventListener('submit', (e) => {
 
     const body = Array.from(subscribeForm.elements)
                       .filter( ({name}) => name )
-                      .map( ({name, value}) => `${name}=${value}` )
+                      .map( ({name, value}) => `${name}=${encodeURIComponent(value)}` )
                       .join('&');
 
     const xhr = new XMLHttpRequest();
@@ -19,5 +19,6 @@ subscribeForm.addEventListener('submit', (e) => {
         console.log(xhr.responseText);
     }
     xhr.open('POST', 'http://localhost:8080');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send(body);
 });
