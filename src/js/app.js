@@ -47,6 +47,7 @@ unsubscriveBtn.addEventListener('click', (e) => {
 });
 
 const uploadForm = document.querySelector('.upload-form');
+const previewImage = document.querySelector('.preview-image');
 
 uploadForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -59,6 +60,7 @@ uploadForm.addEventListener('submit', (e) => {
             
         if (xhr.readyState !== 4) return; // еще не получили ответ на запрос
         console.log(xhr.responseText);
+        previewImage.src = 'http://localhost:8080' + xhr.responseText;
     }
     xhr.open('POST', 'http://localhost:8080/upload');
     xhr.send(body);
