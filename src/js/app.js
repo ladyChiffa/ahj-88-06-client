@@ -45,3 +45,21 @@ unsubscriveBtn.addEventListener('click', (e) => {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send(body);
 });
+
+const uploadForm = document.querySelector('.upload-form');
+
+uploadForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const body = new FormData(uploadForm);
+
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        console.log(xhr.readyState);
+            
+        if (xhr.readyState !== 4) return; // еще не получили ответ на запрос
+        console.log(xhr.responseText);
+    }
+    xhr.open('POST', 'http://localhost:8080/upload');
+    xhr.send(body);
+});
