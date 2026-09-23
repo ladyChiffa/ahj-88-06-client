@@ -16,3 +16,7 @@ body {
     border-radius: 5px;
     padding:10px;
 }
+
+.subscriptions {
+    white-space: pre;
+}

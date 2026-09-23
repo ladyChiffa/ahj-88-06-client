@@ -129,3 +129,18 @@ class SubscriptionApi {
 }
 
 window.api = new SubscriptionApi('http://localhost:8080/');
+
+const eventSource = new EventSource('http://localhost:8080/sse'); // sse - Server-Side Events
+eventSource.addEventListener('open', (e) => {
+    console.log(e);
+    console.log('sse open');
+});
+eventSource.addEventListener('message', (e) => {
+    console.log(e);
+    console.log('sse message');
+});
+eventSource.addEventListener('error', (e) => {
+    console.log(e);
+    console.log('sse error');
+});
+
