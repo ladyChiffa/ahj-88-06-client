@@ -10,7 +10,7 @@
 */
 
 /*-----------------------------------------------------------------------------------------------*/
-/* ПОДПИСКИ, простая версия с XMLHttpRequest */
+/* ПОДПИСКИ, версия с fetch через класс SubscriptionApi */
 
 const subscribeWidget = document.querySelector('.subscribe');
 const subscribeForm = subscribeWidget.querySelector('.subscribe-form');
@@ -30,6 +30,8 @@ unsubscriveBtn.addEventListener('click', (e) => {
     window.api.remove({name: nameInput.value, phone: phoneInput.value});
 });
 
+/*-----------------------------------------------------------------------------------------------*/
+/* ОТПРАВКА ФАЙЛОВ, простая версия с XMLHttpRequest */
 const uploadForm = document.querySelector('.upload-form');
 const previewImage = document.querySelector('.preview-image');
 
@@ -51,8 +53,7 @@ uploadForm.addEventListener('submit', (e) => {
 });
 
 /*-----------------------------------------------------------------------------------------------*/
-/* ПОДПИСКИ, версия на классах с fetch */
-
+/* API для ПОДПИСКИ, версия на классах с fetch */
 class SubscriptionApi {
     constructor (apiUrl) {
         this.apiUrl = apiUrl;
@@ -100,6 +101,8 @@ class SubscriptionApi {
 
 window.api = new SubscriptionApi('http://localhost:8080/');
 
+/*-----------------------------------------------------------------------------------------------*/
+/* SSE */
 const eventSource = new EventSource('http://localhost:8080/sse'); // sse - Server-Side Events
 eventSource.addEventListener('open', (e) => {
     console.log(e);
@@ -117,4 +120,44 @@ eventSource.addEventListener('error', (e) => {
     console.log(e);
     console.log('sse error');
 });
+
+/*-----------------------------------------------------------------------------------------------*/
+/* ЧАТ на WebSocket */
+const chat = document.querySelector('.chat');
+const chatMessage = document.querySelector('.chat-message');
+const chatSend = document.querySelector('.chat-send');
+
+chatSend.addEventListener('click', () => {
+    const message = chatMessage.value;
+    if (!message) return;
+
+    chatMessage.value = ''; // стираем из инпута сообщение
+    ws.send(message);
+});
+
+/*-----------------------------------------------------------------------------------------------*/
+/* WebSocket */
+const ws = new WebSocket('ws://localhost:8080/ws');
+ws.addEventListener('open', (e) => {
+    console.log(e);
+    console.log('ws open');
+});
+ws.addEventListener('close', (e) => {
+    console.log(e);
+    console.log('ws close');
+});
+ws.addEventListener('error', (e) => {
+    console.log(e);
+    console.log('ws error');
+});
+ws.addEventListener('message', (e) => {
+    console.log(e);
+    const data = JSON.parse(e.data);
+    data.chat.forEach(message => {
+        chat.appendChild(document.createTextNode(message + '\n'));
+    });
+    
+    console.log('ws message');
+});
+
 

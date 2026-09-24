@@ -17,6 +17,6 @@ body {
     padding:10px;
 }
 
-.subscriptions {
+.subscriptions, .chat {
     white-space: pre;
 }
