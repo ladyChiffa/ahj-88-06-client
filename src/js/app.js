@@ -21,43 +21,13 @@ const unsubscriveBtn = subscribeWidget.querySelector('.unsubscribe-btn');
 
 subscribeForm.addEventListener('submit', (e) => {
     e.preventDefault();
-
-    const body = Array.from(subscribeForm.elements)
-                      .filter( ({name}) => name )
-                      .map( ({name, value}) => `${name}=${encodeURIComponent(value)}` )
-                      .join('&');
-
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        console.log(xhr.readyState);
-            
-        if (xhr.readyState !== 4) return; // еще не получили ответ на запрос
-        console.log(xhr.responseText);
-    }
-    xhr.open('POST', 'http://localhost:8080');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send(body);
+    window.api.add({name: nameInput.value, phone: phoneInput.value});
 });
-
 
 unsubscriveBtn.addEventListener('click', (e) => {
     e.preventDefault();
 
-    const body = Array.from(subscribeForm.elements)
-                      .filter( ({name}) => name )
-                      .map( ({name, value}) => `${name}=${encodeURIComponent(value)}` )
-                      .join('&');
-
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        console.log(xhr.readyState);
-            
-        if (xhr.readyState !== 4) return; // еще не получили ответ на запрос
-        console.log(xhr.responseText);
-    }
-    xhr.open('DELETE', 'http://localhost:8080');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send(body);
+    window.api.remove({name: nameInput.value, phone: phoneInput.value});
 });
 
 const uploadForm = document.querySelector('.upload-form');
@@ -89,7 +59,7 @@ class SubscriptionApi {
     }
 
     async add(user) {
-        const request = fetch (this.apiUrl, {
+        const request = fetch (this.apiUrl + 'subscriptions/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -108,7 +78,7 @@ class SubscriptionApi {
     }
 
     async remove(user) {
-        const query = '/?phone=' + user.phone;
+        const query = 'subscriptions/' + encodeURIComponent(user.phone);
 
         const request = fetch (this.apiUrl + query, {
             method: 'DELETE',
@@ -135,9 +105,13 @@ eventSource.addEventListener('open', (e) => {
     console.log(e);
     console.log('sse open');
 });
+
+const subscriptionElement = document.querySelector('.subscriptions');
 eventSource.addEventListener('message', (e) => {
     console.log(e);
     console.log('sse message');
+    const {name, phone} = JSON.parse(e.data);
+    subscriptionElement.appendChild(document.createTextNode(`${name} - ${phone}\n`));
 });
 eventSource.addEventListener('error', (e) => {
     console.log(e);
